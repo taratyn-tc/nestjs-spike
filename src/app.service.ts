@@ -1,8 +1,13 @@
 import { Injectable } from '@nestjs/common';
 
+const DEFAULT_TO_GREET = 'World';
+
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Hello World!';
+  getHello(who: string = DEFAULT_TO_GREET): string {
+    if (who === '') {
+      who = DEFAULT_TO_GREET;
+    }
+    return `Hello ${who}!`;
   }
 }
