@@ -2,12 +2,12 @@ import { Controller, Get } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('greeter')
-@Controller({ path: 'greeter' })
-export class GreeterController {
+@Controller({ path: 'greet' })
+export class GreetController {
   constructor() {}
 
   @Get()
   public getGreeting() {
-    return 'foo';
+    return { greeting: 'foo' };
   }
 }

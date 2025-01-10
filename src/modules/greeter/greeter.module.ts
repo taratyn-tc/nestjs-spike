@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { GreeterService } from './greeter.service';
-import { GreeterController } from './greeter.controller';
+import { GreetController } from './greetController';
 
 @Module({
   providers: [GreeterService],
-  controllers: [GreeterController],
+  controllers: [GreetController],
   exports: [GreeterService],
 })
 export class GreeterModule {}

@@ -4,7 +4,7 @@ import { ApiTags } from '@nestjs/swagger';
 
 const EMPTY_STRING = '';
 
-@ApiTags('greeter')
+@ApiTags('app')
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
