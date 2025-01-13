@@ -5,12 +5,13 @@ import { AppService } from './app.service';
 import { GreeterModule } from './modules/greeter/greeter.module';
 import { RouterModule } from '@nestjs/core';
 
-export const prefixedGreeterModule = RouterModule.register([
-  { module: GreeterModule, path: 'greeter' },
-]);
 
 @Module({
-  imports: [GreeterModule, prefixedGreeterModule],
+  imports: [
+    // the double inclusion of GreeterModule is intentional and important.
+    GreeterModule,
+    RouterModule.register([{ module: GreeterModule, path: 'greeter' }]),
+  ],
   controllers: [AppController],
   providers: [AppService],
   exports: [],
