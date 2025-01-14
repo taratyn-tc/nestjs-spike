@@ -2,6 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
+import { validate } from 'class-validator';
+import { GreetingResponseDto } from '../src/modules/greeter/greetingResponse.dto';
+import { Response } from 'superagent';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -13,7 +16,7 @@ describe('AppController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     // need to turn this on just like we do in `main.ts`.
-    app.useGlobalPipes(new ValidationPipe());
+    app.useGlobalPipes(new ValidationPipe({ transform: true }));
     await app.init();
   });
 
@@ -26,12 +29,21 @@ describe('AppController (e2e)', () => {
 
   describe('/greeter/greet', () => {
     describe('POST', () => {
-      it('should return a greeting', () => {
-        return request(app.getHttpServer())
+      let response: Response;
+      beforeEach(async () => {
+        response = await request(app.getHttpServer())
           .post('/greeter/greet')
-          .send({ name: 'Alice' })
-          .expect(201)
-          .expect({ greeting: 'Hello, Alice!' });
+          .send({ name: 'Alice' });
+      });
+
+      it('should return a greeting', () => {
+        expect(response.status).toEqual(201);
+        expect(response.body).toEqual({ greeting: 'Hello, Alice!' });
+      });
+      it('should return a valid response DTO', async () => {
+        const { body } = await response;
+        const errors = await validate(body, GreetingResponseDto);
+        expect(errors).toHaveLength(0);
       });
       it('should require a name', () => {
         return request(app.getHttpServer())
