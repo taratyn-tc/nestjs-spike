@@ -2,11 +2,17 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { GreetingRequestDto } from './greeterRequest.dto';
 import { GreetingResponseDto } from './greetingResponse.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Greeted } from './greeted.entity';
+import { Repository } from 'typeorm';
 
 @ApiTags('greeter')
 @Controller({ path: 'greet' })
 export class GreeterController {
-  constructor() {}
+  constructor(
+    @InjectRepository(Greeted)
+    private greetedRepository: Repository<Greeted>,
+  ) {}
 
   @Post()
   @ApiOkResponse({

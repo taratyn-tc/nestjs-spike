@@ -1,10 +1,4 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Greeted {
@@ -14,9 +8,9 @@ export class Greeted {
   @Column()
   name: string;
 
-  @CreateDateColumn()
-  dateAdded: Date;
-
-  @UpdateDateColumn()
-  dateUpdated: Date;
+  // @CreateDateColumn()
+  // dateAdded: Date;
+  //
+  // @UpdateDateColumn()
+  // dateUpdated: Date;
 }
