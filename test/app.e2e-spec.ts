@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from '../src/app.module';
+import { WebappModule } from '../src/modules/webapp/webapp.module';
 import { validate } from 'class-validator';
 import { GreetingResponseDto } from '../src/modules/greeter/greetingResponse.dto';
 import { Response } from 'superagent';
@@ -11,7 +11,7 @@ describe('AppController (e2e)', () => {
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [WebappModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();

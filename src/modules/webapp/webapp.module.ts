@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { WebappController } from './webapp.controller';
+import { WebappService } from './webapp.service';
 
-import { GreeterModule } from './modules/greeter/greeter.module';
+import { GreeterModule } from '../greeter/greeter.module';
 import { RouterModule } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RootDataSourceConfig } from './rootDataSourceConfig';
+import { RootDataSourceConfig } from '../../rootDataSourceConfig';
 
 @Module({
   imports: [
@@ -14,8 +14,8 @@ import { RootDataSourceConfig } from './rootDataSourceConfig';
     RouterModule.register([{ module: GreeterModule, path: 'greeter' }]),
     TypeOrmModule.forRoot(RootDataSourceConfig),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [WebappController],
+  providers: [WebappService],
   exports: [],
 })
-export class AppModule {}
+export class WebappModule {}

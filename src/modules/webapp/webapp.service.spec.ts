@@ -1,10 +1,10 @@
-import { AppService } from './app.service';
+import { WebappService } from './webapp.service';
 
 describe('AppService', () => {
   describe('getHello', () => {
-    let appService: AppService | null = null;
+    let appService: WebappService | null = null;
     beforeEach(() => {
-      appService = new AppService();
+      appService = new WebappService();
       return () => {
         appService = null;
       };
