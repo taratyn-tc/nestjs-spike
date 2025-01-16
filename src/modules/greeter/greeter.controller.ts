@@ -6,10 +6,23 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Greeted } from './greeted.entity';
 import { Repository } from 'typeorm';
 import { GreeterService } from './greeter.service';
+import { Client, ClientKafka, Transport } from '@nestjs/microservices';
 
 @ApiTags('greeter')
 @Controller({ path: 'greet' })
 export class GreeterController {
+  @Client({
+    transport: Transport.KAFKA,
+    options: {
+      producerOnlyMode: true,
+      client: {
+        clientId: 'SpikeyGreeter',
+        brokers: ['localhost:9092'],
+      },
+    },
+  })
+  private readonly kafkaClient: ClientKafka;
+
   constructor(
     @InjectRepository(Greeted)
     private greetedRepository: Repository<Greeted>,
@@ -28,7 +41,9 @@ export class GreeterController {
     await this.greetedRepository.save(
       this.greetedRepository.create({ name: body.name }),
     );
-
+    this.kafkaClient.emit('greeted.l0', {
+      name: body.name,
+    });
     return { greeting };
   }
 }
