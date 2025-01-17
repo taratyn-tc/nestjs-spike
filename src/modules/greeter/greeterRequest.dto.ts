@@ -1,5 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator'
+import { ApiProperty } from '@nestjs/swagger'
+import { IsEnum, IsNotEmpty } from 'class-validator'
+import { GreeterFormality } from './GreeterFormality'
 
 /**
  * Greetings request DTO
@@ -12,4 +13,8 @@ export class GreetingRequestDto {
   @ApiProperty({ required: true })
   @IsNotEmpty()
   name: string;
+
+  @ApiProperty({ default: GreeterFormality.normal })
+  @IsEnum(GreeterFormality)
+  formality: GreeterFormality;
 }
