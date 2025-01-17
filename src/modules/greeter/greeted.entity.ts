@@ -8,9 +8,6 @@ export class Greeted {
   @Column()
   name: string;
 
-  // @CreateDateColumn()
-  // dateAdded: Date;
-  //
-  // @UpdateDateColumn()
-  // dateUpdated: Date;
+  @Column({ default: 'normal' })
+  formality: string;
 }

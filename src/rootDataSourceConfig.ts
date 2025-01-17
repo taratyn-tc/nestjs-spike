@@ -9,7 +9,7 @@ const dataSourceOptions: DataSourceOptions = {
 
   // path.join causes problems with generation?
   entities: [__dirname + '/modules/**/*.entity{.ts,.js}'],
-  migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
+  migrations: [__dirname + '/migrations/*{.ts,.js}'],
 };
 
 export const dataSource = new DataSource(dataSourceOptions);
