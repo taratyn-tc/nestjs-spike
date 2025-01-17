@@ -3,10 +3,11 @@ import { GreeterService } from './greeter.service';
 import { GreeterController } from './greeter.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Greeted } from './greeted.entity';
+import { GreetingPublisherService } from './greeting-publisher.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Greeted])],
-  providers: [GreeterService],
+  providers: [GreeterService, GreetingPublisherService],
   controllers: [GreeterController],
   exports: [GreeterService],
 })
