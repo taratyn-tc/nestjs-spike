@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { WebappModule } from '../src/modules/webapp/webapp.module';
-import { validate } from 'class-validator';
 import { Response } from 'superagent';
 import { dataSourceOptions } from '../src/rootDataSourceConfig';
 import { Greeted } from '../src/modules/greeter/greeted.entity';
@@ -100,11 +99,7 @@ describe('AppController (e2e)', () => {
           ),
         ).not.toEqual(-1);
       });
-      it.skip('should return a valid response DTO', async () => {
-        const { body } = response;
-        const errors = await validate('GreetingResponseDto', body);
-        expect(errors).not.toHaveLength(0);
-      });
+
       it('should require a name', async () => {
         await request(app.getHttpServer())
           .post('/greeter/greet')
