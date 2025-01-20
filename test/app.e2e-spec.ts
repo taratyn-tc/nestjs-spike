@@ -12,6 +12,7 @@ import * as process from 'node:process';
 
 let repository: Repository<Greeted>;
 let dataSource: DataSource;
+
 beforeAll(async () => {
   dataSource = new DataSource(dataSourceOptions);
   await dataSource.initialize();
@@ -20,16 +21,6 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await dataSource.destroy();
-});
-
-afterAll(() => {
-  console.log('wtf');
-  console.log(process.getActiveResourcesInfo());
-  setTimeout(() => {
-    console.log('aaa');
-    wtf.dump();
-  }, 5_000);
-  console.log('/wtf');
 });
 
 describe('AppController (e2e)', () => {
@@ -44,9 +35,9 @@ describe('AppController (e2e)', () => {
     // need to turn this on just like we do in `main.ts`.
     app.useGlobalPipes(new ValidationPipe({ transform: true }));
     await app.init();
-    return async () => {
-      await app.close();
-    };
+  });
+  afterEach(async () => {
+    await app.close();
   });
 
   it('/ (GET)', () => {

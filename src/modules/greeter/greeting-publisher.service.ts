@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Greeted } from './greeted.entity';
 import { Repository } from 'typeorm';
 import { GreetingRequestDto } from './greeterRequest.dto';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class GreetingPublisherService {
@@ -24,9 +25,13 @@ export class GreetingPublisherService {
     await this.greetedRepository.save(
       this.greetedRepository.create({ ...param }),
     );
-    this.kafkaClient.emit('greeted.l0', {
-      greeting,
-      ...param,
-    });
+
+    // we must await to confirm that we successfully emitted.
+    await lastValueFrom(
+      this.kafkaClient.emit('greeted.l0', {
+        greeting,
+        ...param,
+      }),
+    );
   }
 }
