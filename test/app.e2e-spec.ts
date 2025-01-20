@@ -4,11 +4,9 @@ import * as request from 'supertest';
 import { WebappModule } from '../src/modules/webapp/webapp.module';
 import { validate } from 'class-validator';
 import { Response } from 'superagent';
-import wtf from 'wtfnode';
 import { dataSourceOptions } from '../src/rootDataSourceConfig';
 import { Greeted } from '../src/modules/greeter/greeted.entity';
 import { DataSource, Repository } from 'typeorm';
-import * as process from 'node:process';
 
 let repository: Repository<Greeted>;
 let dataSource: DataSource;

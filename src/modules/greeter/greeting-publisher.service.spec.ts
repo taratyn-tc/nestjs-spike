@@ -4,13 +4,20 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Greeted } from './greeted.entity';
 import { GreetingRequestDto } from './greeterRequest.dto';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
 
 describe('GreetingPublisherService', () => {
   let service: GreetingPublisherService;
   let mockKafkaClient: { emit: jest.Mock<any, any, any> };
 
   beforeEach(async () => {
-    mockKafkaClient = { emit: jest.fn() };
+    const emitObs = new Observable((subscriber) => {
+      subscriber.next(1);
+      subscriber.complete();
+    });
+    mockKafkaClient = {
+      emit: jest.fn().mockReturnValue(emitObs),
+    };
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot({
