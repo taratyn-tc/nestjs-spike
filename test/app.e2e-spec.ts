@@ -7,10 +7,10 @@ import { Response } from 'superagent';
 import { dataSourceOptions } from '../src/rootDataSourceConfig';
 import { Greeted } from '../src/modules/greeter/greeted.entity';
 import { DataSource, Repository } from 'typeorm';
+import { Consumer, EachMessagePayload, Kafka } from 'kafkajs';
 
 let repository: Repository<Greeted>;
 let dataSource: DataSource;
-
 beforeAll(async () => {
   dataSource = new DataSource(dataSourceOptions);
   await dataSource.initialize();
@@ -19,6 +19,36 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await dataSource.destroy();
+});
+
+let consumer: Consumer;
+const greetedL0Messages: EachMessagePayload[] = [];
+beforeAll(async () => {
+  const seed = jest.getSeed();
+  const kafka = new Kafka({
+    clientId: `spikey-e2e-${seed}`,
+    brokers: ['localhost:9092'],
+  });
+  consumer = kafka.consumer({
+    groupId: `e2e-greetings-${seed}`,
+  });
+
+  const joinedGroup: Promise<void> = new Promise((resolve) => {
+    consumer.on('consumer.group_join', () => {
+      resolve();
+    });
+  });
+  await consumer.subscribe({ topic: 'greeted.l0' });
+  await consumer.run({
+    eachMessage: async (payload: EachMessagePayload): Promise<void> => {
+      greetedL0Messages.push(payload);
+    },
+  });
+  await joinedGroup;
+});
+
+afterAll(async () => {
+  await consumer.disconnect();
 });
 
 describe('AppController (e2e)', () => {
@@ -49,19 +79,26 @@ describe('AppController (e2e)', () => {
     describe('POST', () => {
       let response: Response;
       let initialGreetedCount: number;
+      let name: string;
 
       beforeEach(async () => {
         initialGreetedCount = await repository.count();
+        name = `Alice-${jest.getSeed()}`;
         response = await request(app.getHttpServer())
           .post('/greeter/greet')
-          .send({ name: 'Alice', formality: 'formal' });
+          .send({ name, formality: 'formal' });
       });
 
       it('should return a greeting', async () => {
-        expect(response.body).toEqual({ greeting: 'Greetings, Alice!' });
+        expect(response.body).toEqual({ greeting: `Greetings, ${name}!` });
         expect(response.status).toEqual(201);
         const countAfterOperation = await repository.count();
         expect(countAfterOperation).toEqual(initialGreetedCount + 1);
+        expect(
+          greetedL0Messages.findIndex((v) =>
+            v.message.value?.toString().includes(name),
+          ),
+        ).not.toEqual(-1);
       });
       it.skip('should return a valid response DTO', async () => {
         const { body } = response;
