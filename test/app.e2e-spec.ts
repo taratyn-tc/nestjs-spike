@@ -3,7 +3,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { WebappModule } from '../src/modules/webapp/webapp.module';
 import { Response } from 'superagent';
-import { dataSourceOptions } from '../src/rootDataSourceConfig';
+import { dataSourceOptions } from '../src/dataSourceConfig';
 import { Greeted } from '../src/modules/greeter/greeted.entity';
 import { DataSource, Repository } from 'typeorm';
 import { Consumer, EachMessagePayload, Kafka, logLevel } from 'kafkajs';

@@ -11,6 +11,6 @@ export const dataSourceOptions: DataSourceOptions = {
   migrations: [__dirname + '/migrations/*{.ts,.js}'],
 };
 
-export const RootDataSourceConfig: TypeOrmModuleOptions = {
+export const dataSourceConfig: TypeOrmModuleOptions = {
   ...dataSourceOptions,
 };
